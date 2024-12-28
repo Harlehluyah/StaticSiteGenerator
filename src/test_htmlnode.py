@@ -1,6 +1,7 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import HTMLNode, LeafNode, ParentNode, text_node_to_html_node
+from textnode import TextNode, TextType
 
 class TestHTMLNode(unittest.TestCase):
     
@@ -70,6 +71,39 @@ class TestHTMLNode(unittest.TestCase):
             ]
         )
         self.assertEqual(parent.to_html(), "<div><p>first</p><p>second</p><p>third</p></div>")
+
+#   ----- text_node_to_html_node Helper Function Tests -----------------------------------------
+
+    def test_text_to_html(self):
+        text_node = TextNode("text", TextType.TEXT)
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(html_node.to_html(), "text")
+    
+    def test_bold_to_html(self):
+        bold_text_node = TextNode("text", TextType.BOLD)
+        html_node = text_node_to_html_node(bold_text_node)
+        self.assertEqual(html_node.to_html(), "<b>text</b>")
+        
+    def test_italic_to_html(self):
+        italic_text_node = TextNode("text", TextType.ITALIC)
+        html_node = text_node_to_html_node(italic_text_node)
+        self.assertEqual(html_node.to_html(), "<i>text</i>")
+    
+    def test_code_to_html(self):
+        code_text_node = TextNode("text", TextType.CODE)
+        html_node = text_node_to_html_node(code_text_node)
+        self.assertEqual(html_node.to_html(), "<code>text</code>")
+    
+    def test_link_to_html(self):
+        link_node = TextNode("Click here", TextType.LINK, "http://boot.dev")
+        html_node = text_node_to_html_node(link_node)
+        self.assertEqual(html_node.to_html(), "<a href=\"http://boot.dev\">Click here</a>")
+    
+    def test_image_to_html(self):
+        image_node = TextNode("puppy.jpg", TextType.IMAGE, "A cute puppy")
+        html_node = text_node_to_html_node(image_node)
+        self.assertEqual(html_node.to_html(), "<img src=\"puppy.jpg\" alt=\"A cute puppy\"></img>") # ATTENTION! </img> is not HTML5 standard but this test needs it   
+        
 
 
 
