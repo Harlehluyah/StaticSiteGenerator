@@ -48,7 +48,7 @@ class ParentNode(HTMLNode):
             html += child.to_html()
         return html + f"</{self.tag}>"
     
-#   ----- Helper Function --------------------------
+#   ----- Helper Functions --------------------------------------------------
 
 def text_node_to_html_node(text_node):
 
@@ -73,7 +73,9 @@ def text_node_to_html_node(text_node):
                                                        "alt": f"{text_node.url}"})
         case _:
             raise Exception("Invalid Text Type")
-    
+        
+        
+        
             
         
             
