@@ -1,8 +1,11 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TestHTMLNode(unittest.TestCase):
+    
+#   ----- HTMLNode Tests ----------------------------------------------------------------------------
+
     def test_props_to_html(self):
         node = HTMLNode(props={"href": "https://www.google.com", "target": "_blank"})
         result = node.props_to_html()
@@ -30,14 +33,43 @@ class TestHTMLNode(unittest.TestCase):
         result = node.props_to_html()
         expected = ''
         self.assertEqual(result, expected, "Expected an empty string when props is not set.")
-    
-    def test_to_html_no_children(self): #leaf node
+
+#   ----- LeafNode Tests -------------------------------------------------------------------------
+
+    def test_to_html_no_children(self): 
         node = LeafNode("p", "Hello, world!")
         self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
 
-    def test_to_html_no_tag(self): # leaf node
+    def test_to_html_no_tag(self): 
         node = LeafNode(None, "Hello, world!")
         self.assertEqual(node.to_html(), "Hello, world!")
+        
+#   ----- ParentNode Tests -----------------------------------------------------------------------
+        
+    def test_to_html_one_children(self): 
+        parent = ParentNode("div", [LeafNode("p", "text")])
+        self.assertEqual(parent.to_html(), "<div><p>text</p></div>")
+    
+    def test_to_html_nested_parent(self): 
+        nestedParent = ParentNode("div", [
+            ParentNode("p", [LeafNode("span", "text")])
+        ])
+        self.assertEqual(nestedParent.to_html(), "<div><p><span>text</span></p></div>")
+    
+    def test_to_html_with_props(self):
+        parent = ParentNode("div", [LeafNode("p", "text")], {"class": "container"})
+        self.assertEqual(parent.to_html(), "<div class=\"container\"><p>text</p></div>")
+        
+    def test_to_html_multiple_children(self):
+        parent = ParentNode(
+            "div",
+            [
+                LeafNode("p", "first"),
+                LeafNode("p", "second"),
+                LeafNode("p", "third")
+            ]
+        )
+        self.assertEqual(parent.to_html(), "<div><p>first</p><p>second</p><p>third</p></div>")
 
 
 
