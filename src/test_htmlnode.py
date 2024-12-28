@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 class TestHTMLNode(unittest.TestCase):
     def test_props_to_html(self):
@@ -30,6 +30,14 @@ class TestHTMLNode(unittest.TestCase):
         result = node.props_to_html()
         expected = ''
         self.assertEqual(result, expected, "Expected an empty string when props is not set.")
+    
+    def test_to_html_no_children(self): #leaf node
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+
+    def test_to_html_no_tag(self): # leaf node
+        node = LeafNode(None, "Hello, world!")
+        self.assertEqual(node.to_html(), "Hello, world!")
 
 
 
