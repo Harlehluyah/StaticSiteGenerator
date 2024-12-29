@@ -10,10 +10,16 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         if old_node.text_type != TextType.TEXT:
             new_nodes.append(old_node)
             continue
-        split_nodes = []
+        
         sections = old_node.text.split(delimiter)
-        if len(sections) % 2 == 0:
-            raise ValueError("Invalid markdown, formatted section not closed")
+        
+        # If there's only one section, no delimiter was found
+        if len(sections) == 1:
+            new_nodes.append(old_node)
+            continue
+            
+        # For text wrapped in delimiter, we should get ["", "text", ""]
+        split_nodes = []
         for i in range(len(sections)):
             if sections[i] == "":
                 continue
@@ -21,6 +27,10 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 split_nodes.append(TextNode(sections[i], TextType.TEXT))
             else:
                 split_nodes.append(TextNode(sections[i], text_type))
+                
+        if not split_nodes:
+            split_nodes.append(old_node)
+            
         new_nodes.extend(split_nodes)
     return new_nodes
 
@@ -138,7 +148,7 @@ def block_to_block_type(block):
     
     for line in lines:
         line.strip()
-        if line.startswith("-") or line.startswith("*"):
+        if line.strip().startswith("* ") or line.strip().startswith("- "):
             unordered_list_checker.append(True)
         else:
             unordered_list_checker.append(False)

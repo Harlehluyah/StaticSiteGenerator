@@ -97,6 +97,22 @@ this is paragraph text
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
         )
 
+    def test_codeblock(self):
+        md = """
+```
+This is a code block
+```
+
+this is paragraph text
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><pre><code>This is a code block\n</code></pre><p>this is paragraph text</p></div>",
+        )
 
 if __name__ == "__main__":
     unittest.main()
