@@ -6,7 +6,8 @@ from inline_markdown import (
     split_nodes_link,
     split_nodes_image,
     text_to_textnodes,
-    markdown_to_blocks
+    markdown_to_blocks,
+    block_to_block_type
     )
 
 from textnode import TextNode, TextType
@@ -141,7 +142,7 @@ class TestInlineMarkdown(unittest.TestCase):
         result = extract_markdown_links(text)
         self.assertEqual(result, [("link", "https://boot.dev")])
         
-#   ----- split_node_image Tests ----------------------------------------------------------------
+#   ----- split_node_image(node) Tests ----------------------------------------------------------------
 
     def test_split_image(self):
         node = TextNode(
@@ -188,7 +189,7 @@ class TestInlineMarkdown(unittest.TestCase):
             new_nodes,
         )
 
-#   ----- split_node_link Tests -----------------------------------------------------------------
+#   ----- split_node_link(node) Tests -----------------------------------------------------------------
         
     def test_split_links(self):
         node = TextNode(
@@ -207,7 +208,7 @@ class TestInlineMarkdown(unittest.TestCase):
         new_nodes,
 )
         
-#   ----- text_to_textnodes Test ------------------------------------------------------------------
+#   ----- text_to_textnodes(text) Test ------------------------------------------------------------------
 
     def test_text_to_textnodes(self):
         nodes = text_to_textnodes(
@@ -229,7 +230,7 @@ class TestInlineMarkdown(unittest.TestCase):
             nodes,
         )
 
-#   ----- markdown_to_blocks Test -------------------------------------------------------------------
+#   ----- markdown_to_blocks(markdown) Test -------------------------------------------------------------------
 
     def test_markdown_to_blocks(self):
         
@@ -248,6 +249,52 @@ class TestInlineMarkdown(unittest.TestCase):
         
         result = markdown_to_blocks(markdown_input)
         self.assertEqual(result, expected_output)
+
+#   ----- block_to_block_type(block) Test -------------------------------------------------------------------
+
+    def test_block_to_heading_type(self):
+        heading_block = "#### This is a header"
+        result = block_to_block_type(heading_block)
+        expected = "heading"
+        
+        self.assertEqual(result, expected)
+
+    def test_block_to_code_type(self):
+        code_block = "```This is code```"
+        result = block_to_block_type(code_block)
+        expected = "code"
+        
+        self.assertEqual(result, expected)
+        
+    def test_block_to_quote_type(self):
+        quote_block = ">Roses are red\n>Violets are blue\n>Cant think of a rhyme"
+        result = block_to_block_type(quote_block)
+        expected = "quote"
+        
+        self.assertEqual(result, expected)
+    
+    def test_block_to_unordered_list_type(self):
+        unordered_list_block = "* milk\n*cheese\n- apple\n-banana"
+        result = block_to_block_type(unordered_list_block)
+        expected = "unordered_list"
+        
+        self.assertEqual(result, expected)
+        
+    def test_block_to_ordered_list_type(self):
+        ordered_list_block = "1. Study Python\n2. Get good\n3. Get Job/Intern\n4. Learn more"
+        result = block_to_block_type(ordered_list_block)
+        expected = "ordered_list"
+        
+        self.assertEqual(result, expected)
+        
+    def test_block_to_paragraph_type(self):
+        paragraph_block = "This is a paragraph"
+        result = block_to_block_type(paragraph_block)
+        expected = "paragraph"
+        
+        self.assertEqual(result, expected)
+    
+    
 
 if __name__ == "__main__":
     unittest.main()

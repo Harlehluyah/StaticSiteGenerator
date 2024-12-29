@@ -110,3 +110,50 @@ def markdown_to_blocks(markdown):
             formatted_block_list.append(formatted_block)
     
     return formatted_block_list
+
+def block_to_block_type(block):
+    
+    if re.match(r"^#{1,6} ", block):
+        return "heading"
+
+    if block.startswith("```") and block.endswith("```"):
+        return "code"
+    
+    lines = block.split("\n")
+    
+    quote_checker = []
+    unordered_list_checker = []
+    ordered_list_checker = []
+     
+    for line in lines:
+        line.strip()
+        if line.startswith(">"):
+            quote_checker.append(True)
+        else:
+            quote_checker.append(False)
+    
+    for line in lines:
+        line.strip()
+        if line.startswith("-") or line.startswith("*"):
+            unordered_list_checker.append(True)
+        else:
+            unordered_list_checker.append(False)
+        
+    for i in range(len(lines)):
+        if lines[i].strip().startswith(f"{i+1}. "):
+            ordered_list_checker.append(True)
+        else:
+            ordered_list_checker.append(False)
+    
+    if all(quote_checker):
+        return "quote"
+    elif all(unordered_list_checker):
+        return "unordered_list"
+    elif all(ordered_list_checker):
+        return "ordered_list"
+    
+    return "paragraph"
+        
+    
+    
+         
