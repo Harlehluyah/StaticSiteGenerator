@@ -5,7 +5,8 @@ from inline_markdown import (
     extract_markdown_links,
     split_nodes_link,
     split_nodes_image,
-    text_to_textnodes
+    text_to_textnodes,
+    markdown_to_blocks
     )
 
 from textnode import TextNode, TextType
@@ -227,7 +228,26 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             nodes,
         )
+
+#   ----- markdown_to_blocks Test -------------------------------------------------------------------
+
+    def test_markdown_to_blocks(self):
         
+        markdown_input = """# Heading
+
+        This is a paragraph.
+
+        * List item 1
+        * List item 2"""
+        
+        expected_output = [
+            "# Heading",
+            "This is a paragraph.",
+            "* List item 1\n* List item 2"
+        ]
+        
+        result = markdown_to_blocks(markdown_input)
+        self.assertEqual(result, expected_output)
 
 if __name__ == "__main__":
     unittest.main()

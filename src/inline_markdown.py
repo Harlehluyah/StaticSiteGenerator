@@ -97,3 +97,16 @@ def text_to_textnodes(text):
     nodes = split_nodes_link(nodes)
     return nodes
         
+def markdown_to_blocks(markdown):
+
+    block_list = markdown.split("\n\n")
+    formatted_block_list = []
+    
+    for block in block_list:
+        if block != "":
+            lines = block.strip().split("\n")
+            trimmed_lines = [line.strip() for line in lines]
+            formatted_block = "\n".join(trimmed_lines)
+            formatted_block_list.append(formatted_block)
+    
+    return formatted_block_list
